@@ -15,11 +15,12 @@ class User implements UserInterface
     public const ROLE_USER = 'ROLE_USER';
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="App\Helper\UuidGenerator")
+     * @ORM\Column(type="string")
      */
-    private $id;
+    private ?string $id = null;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -37,9 +38,14 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Collection", mappedBy="user")
+     */
+    private \Doctrine\Common\Collections\Collection $collections;
+
     private ?string $plainPassword;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -125,5 +131,29 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
          $this->plainPassword = null;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCollections(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->collections;
+    }
+
+    public function addCollection(Collection $collection): void
+    {
+        if (!$this->collections->contains($collection)) {
+            $this->collections->add($collection);
+            $collection->setUser($this);
+        }
+    }
+
+    public function removeCollection(Collection $collection): void
+    {
+        if ($this->collections->contains($collection)) {
+            $this->collections->removeElement($collection);
+            $collection->setUser(null);
+        }
     }
 }
