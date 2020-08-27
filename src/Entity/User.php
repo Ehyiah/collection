@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,11 +16,12 @@ class User implements UserInterface
     public const ROLE_USER = 'ROLE_USER';
 
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="App\Helper\UuidGenerator")
+     * @ORM\Column(type="string")
      */
-    private $id;
+    private ?string $id = null;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -32,14 +34,18 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CollectionUser", mappedBy="user")
+     */
+    private Collection $collectionsUsers;
+
     private ?string $plainPassword;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -56,23 +62,14 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUsername(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -85,9 +82,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getPassword(): string
     {
         return (string) $this->password;
@@ -110,20 +104,37 @@ class User implements UserInterface
         $this->plainPassword = $plainPassword;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+         $this->plainPassword = null;
     }
 
     /**
-     * @see UserInterface
+     * @return Collection|CollectionUser[]
      */
-    public function eraseCredentials()
+    public function getCollectionsUsers(): Collection
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-         $this->plainPassword = null;
+        return $this->collectionsUsers;
+    }
+
+    public function addCollectionUsers(CollectionUser $collection): void
+    {
+        if (!$this->collectionsUsers->contains($collection)) {
+            $this->collectionsUsers->add($collection);
+            $collection->setUser($this);
+        }
+    }
+
+    public function removeCollectionUsers(CollectionUser $collection): void
+    {
+        if ($this->collectionsUsers->contains($collection)) {
+            $this->collectionsUsers->removeElement($collection);
+            $collection->setUser(null);
+        }
     }
 }
