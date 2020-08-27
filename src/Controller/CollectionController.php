@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CollectionUser;
 use App\Form\CollectionType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +28,38 @@ final class CollectionController extends AbstractApiController
             $this->getDoctrine()->getManager()->persist($form->getData());
             $this->getDoctrine()->getManager()->flush();
 
-            return new JsonResponse('CollectionUser créée', Response::HTTP_CREATED);
+            return new JsonResponse('Collection créée', Response::HTTP_CREATED);
         }
 
-        return new JsonResponse($this->getErrorsFromForm($form), Response::HTTP_BAD_REQUEST);
+        return new JsonResponse($this->getErrorsFromForm($form), Response::HTTP_BAD_REQUEST, [], true);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="edit", methods={"PATCH"})
+     */
+    public function editCollection(CollectionUser $collectionUser, Request $request): JsonResponse
+    {
+        $form = $this->createForm(CollectionType::class, $collectionUser)
+            ->submit($this->getJson($request), false)
+        ;
+
+        if ($form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return new JsonResponse('Collection modifiée', Response::HTTP_OK);
+        }
+
+        return new JsonResponse($this->getErrorsFromForm($form), Response::HTTP_BAD_REQUEST, [], true);
+    }
+
+    /**
+     * @Route("/delete/{id}", name="edit", methods={"DELETE"})
+     */
+    public function deleteCollection(CollectionUser $collectionUser): JsonResponse
+    {
+        $this->getDoctrine()->getManager()->remove($collectionUser);
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse('Collection supprimée', Response::HTTP_OK);
     }
 }
