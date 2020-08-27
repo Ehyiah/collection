@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -33,15 +34,14 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Collection", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\CollectionUser", mappedBy="user")
      */
-    private \Doctrine\Common\Collections\Collection $collections;
+    private Collection $collectionsUsers;
 
     private ?string $plainPassword;
 
@@ -62,23 +62,14 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUsername(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -91,9 +82,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getPassword(): string
     {
         return (string) $this->password;
@@ -116,43 +104,36 @@ class User implements UserInterface
         $this->plainPassword = $plainPassword;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return null;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
          $this->plainPassword = null;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|CollectionUser[]
      */
-    public function getCollections(): \Doctrine\Common\Collections\Collection
+    public function getCollectionsUsers(): Collection
     {
-        return $this->collections;
+        return $this->collectionsUsers;
     }
 
-    public function addCollection(Collection $collection): void
+    public function addCollectionUsers(CollectionUser $collection): void
     {
-        if (!$this->collections->contains($collection)) {
-            $this->collections->add($collection);
+        if (!$this->collectionsUsers->contains($collection)) {
+            $this->collectionsUsers->add($collection);
             $collection->setUser($this);
         }
     }
 
-    public function removeCollection(Collection $collection): void
+    public function removeCollectionUsers(CollectionUser $collection): void
     {
-        if ($this->collections->contains($collection)) {
-            $this->collections->removeElement($collection);
+        if ($this->collectionsUsers->contains($collection)) {
+            $this->collectionsUsers->removeElement($collection);
             $collection->setUser(null);
         }
     }

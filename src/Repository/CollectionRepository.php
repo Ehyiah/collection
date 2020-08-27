@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Collection;
+use App\Entity\CollectionUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Collection|null find($id, $lockMode = null, $lockVersion = null)
- * @method Collection|null findOneBy(array $criteria, array $orderBy = null)
- * @method Collection[]    findAll()
- * @method Collection[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CollectionUser|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CollectionUser|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CollectionUser[]    findAll()
+ * @method CollectionUser[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CollectionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Collection::class);
+        parent::__construct($registry, CollectionUser::class);
     }
 
     // /**
-    //  * @return Collection[] Returns an array of Collection objects
+    //  * @return CollectionUser[] Returns an array of CollectionUser objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class CollectionRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Collection
+    public function findOneBySomeField($value): ?CollectionUser
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')
