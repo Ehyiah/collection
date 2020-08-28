@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/category", name="category_")
  */
-final class CategoryController extends AbstractApiController
+final class ApiCategoryController extends AbstractApiController
 {
     /**
      * @Route("/create", name="create", methods={"POST"})

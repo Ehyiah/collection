@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/element", name="element_")
  */
-final class ElementController extends AbstractApiController
+final class ApiElementController extends AbstractApiController
 {
     /**
      * @Route("/add/{id}", name="add", methods={"POST"})

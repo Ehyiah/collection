@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/user", name="user_")
  */
-final class UserController extends AbstractApiController
+final class ApiUserController extends AbstractApiController
 {
 
 }

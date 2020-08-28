@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/collection", name="api_collection_")
  */
-final class CollectionController extends AbstractApiController
+final class ApiCollectionController extends AbstractApiController
 {
     /**
      * @Route("/create", name="create", methods={"POST"})
