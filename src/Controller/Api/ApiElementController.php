@@ -13,14 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/element", name="element_")
  */
-final class ElementController extends AbstractApiController
+final class ApiElementController extends AbstractApiController
 {
     /**
      * @Route("/add/{id}", name="add", methods={"POST"})
      */
     public function addElement(CollectionUser $collectionUser, Request $request): JsonResponse
     {
-        $form = $this->createForm(ElementType::class)->submit($this->getJson($request), false);
+        $form = $this->createForm(ElementType::class)
+            ->submit($this->getJson($request), false);
 
         /** @var Element $data */
         $data = $form->getData();

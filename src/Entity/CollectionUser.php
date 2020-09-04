@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CollectionRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CollectionRepository::class)
@@ -16,11 +17,15 @@ class CollectionUser
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="App\Helper\UuidGenerator")
      * @ORM\Column(type="string")
+     *
+     * @Groups({"collection-all"})
      */
     private ?string $id = null;
 
     /**
      * @ORM\Column(type="string")
+     *
+     * @Groups({"collection-all"})
      */
     private ?string $name = null;
 
@@ -31,11 +36,15 @@ class CollectionUser
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="collectionsUsers")
+     *
+     * @Groups({"collection-all"})
      */
     private ?Category $category;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Element", mappedBy="collectionUser")
+     *
+     * @Groups({"collection-all"})
      */
     private ?Collection $elements;
 

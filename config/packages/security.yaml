@@ -18,6 +18,10 @@ security:
             pattern:  ^/api/token/refresh
             stateless: true
             anonymous: true
+        api_create:
+            pattern: ^/api/user/create
+            stateless: true
+            anonymous: true
         api_login:
             pattern:  ^/api/login
             stateless: true
@@ -52,4 +56,4 @@ security:
         - { path: ^/api/user/create, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY, allow_if: "user.isActive()" }
+#        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY, allow_if: "user.isActive()" }

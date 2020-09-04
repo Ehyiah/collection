@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -16,6 +17,8 @@ class Category
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="App\Helper\UuidGenerator")
      * @ORM\Column(type="string")
+     *
+     * @Groups({"collection-all"})
      */
     private ?string $id = null;
 
@@ -26,6 +29,8 @@ class Category
 
     /**
      * @ORM\Column(type="string")
+     *
+     * @Groups({"collection-all"})
      */
     private string $name;
 
