@@ -26,24 +26,24 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    private ?string $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @ORM\Column(type="string")
      */
-    private $password;
+    private ?string $password;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CollectionUser", mappedBy="user")
      */
     private Collection $collectionsUsers;
 
-    private ?string $plainPassword;
+    private ?string $plainPassword = null;
 
     public function getId(): ?string
     {
@@ -82,7 +82,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return (string) $this->password;
     }

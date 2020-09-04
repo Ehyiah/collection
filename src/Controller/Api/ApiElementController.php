@@ -20,7 +20,8 @@ final class ApiElementController extends AbstractApiController
      */
     public function addElement(CollectionUser $collectionUser, Request $request): JsonResponse
     {
-        $form = $this->createForm(ElementType::class)->submit($this->getJson($request), false);
+        $form = $this->createForm(ElementType::class)
+            ->submit($this->getJson($request), false);
 
         /** @var Element $data */
         $data = $form->getData();

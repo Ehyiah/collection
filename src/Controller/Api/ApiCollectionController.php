@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * @Route("/api/collection", name="api_collection_")
@@ -61,5 +63,22 @@ final class ApiCollectionController extends AbstractApiController
         $this->getDoctrine()->getManager()->flush();
 
         return new JsonResponse('Collection supprimée', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/all", name="all", methods={"GET"})
+     */
+    public function all(): JsonResponse
+    {
+        $collections = $this->getDoctrine()->getRepository(CollectionUser::class)->findAll();
+        $collections = $this->serializer->serialize($collections, JsonEncoder::FORMAT, [
+            AbstractNormalizer::CIRCULAR_REFERENCE_LIMIT => 1,
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId();
+            },
+            AbstractNormalizer::GROUPS => ['groups' => 'collection-all']
+        ]);
+
+        return new JsonResponse($collections, Response::HTTP_OK, [], true);
     }
 }
